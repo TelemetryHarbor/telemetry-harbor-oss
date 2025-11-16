@@ -21,11 +21,17 @@ func IngestData(c *fiber.Ctx) error {
 	var data SensorData
 	if err := json.Unmarshal(rawBody, &data); err != nil {
 		fmt.Printf("JSON Unmarshal error: %v\n", err)
-		return fiber.NewError(http.StatusBadRequest, "Invalid request body")
+		return c.Status(http.StatusBadRequest).JSON(models.APIError{
+			Message: "Invalid request body",
+			Details: "Could not parse JSON: " + err.Error(),
+		})
 	}
 
 	if validationErrors := utils.ValidateStruct(&data); len(validationErrors) > 0 {
-		return c.Status(http.StatusBadRequest).JSON(models.NewValidationError(validationErrors))
+		return c.Status(http.StatusBadRequest).JSON(models.APIError{
+			Message: "Validation Error",
+			Details: validationErrors,
+		})
 	}
 
 	queuedData := models.QueuedData{
@@ -36,10 +42,12 @@ func IngestData(c *fiber.Ctx) error {
 
 	dataJSON, err := json.Marshal(queuedData)
 	if err != nil {
+		// This is a 500 error, let the customErrorHandler handle it
 		return fiber.NewError(http.StatusInternalServerError, "Failed to prepare data for queue")
 	}
 
 	if err := cache.RedisClient.RPush(c.Context(), config.AppConfig.IngestQueueName, dataJSON).Err(); err != nil {
+		// This is a 500 error, let the customErrorHandler handle it
 		return fiber.NewError(http.StatusInternalServerError, "Failed to queue data for ingestion")
 	}
 
@@ -54,21 +62,29 @@ func IngestData(c *fiber.Ctx) error {
 func IngestBatchData(c *fiber.Ctx) error {
 	rawBody := c.Body()
 	fmt.Printf("Raw request body: %s\n", string(rawBody))
-	
+
 	var batch []SensorData
 	if err := json.Unmarshal(rawBody, &batch); err != nil {
 		fmt.Printf("JSON Unmarshal error: %v\n", err)
-		return fiber.NewError(http.StatusBadRequest, "Invalid request body")
+		return c.Status(http.StatusBadRequest).JSON(models.APIError{
+			Message: "Invalid request body",
+			Details: "Could not parse JSON array: " + err.Error(),
+		})
 	}
 
 	if len(batch) == 0 {
-		return fiber.NewError(http.StatusBadRequest, "Batch cannot be empty")
-	}
-	
-	if validationErrors := utils.ValidateBatch(batch); len(validationErrors) > 0 {
-		return c.Status(http.StatusBadRequest).JSON(models.NewValidationError(validationErrors))
+		return c.Status(http.StatusBadRequest).JSON(models.APIError{
+			Message: "Invalid request body",
+			Details: "Batch cannot be empty.",
+		})
 	}
 
+	if validationErrors := utils.ValidateBatch(batch); len(validationErrors) > 0 {
+		return c.Status(http.StatusBadRequest).JSON(models.APIError{
+			Message: "Validation Error",
+			Details: validationErrors,
+		})
+	}
 
 	queuedData := models.QueuedData{
 		RetryCount: 0,
@@ -78,11 +94,13 @@ func IngestBatchData(c *fiber.Ctx) error {
 
 	dataJSON, err := json.Marshal(queuedData)
 	if err != nil {
+		// This is a 500 error, let the customErrorHandler handle it
 		return fiber.NewError(http.StatusInternalServerError, "Failed to prepare batch data")
 	}
 
 	if err := cache.RedisClient.RPush(c.Context(), config.AppConfig.IngestQueueName, dataJSON).Err(); err != nil {
-		return fiber.NewError(http.StatusInternalServerError, "Failed to queue batch data")
+		// This is a 500 error, let the customErrorHandler handle it
+		return fiber.NewError(http.StatusInternalServerError, "Failed to queue data for ingestion")
 	}
 
 	return c.Status(http.StatusOK).JSON(fiber.Map{

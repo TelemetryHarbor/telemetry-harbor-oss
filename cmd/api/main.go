@@ -102,12 +102,8 @@ func customHTTPErrorHandler(c *fiber.Ctx, err error) error {
 
 	log.Printf("[API] ErrorHandler: URL=%s, Error=%v, Status=%d", c.OriginalURL(), err, code)
 
-	return c.Status(code).JSON(models.ErrorResponse{
-		StatusCode: code,
-		Message:    message,
+	return c.Status(code).JSON(models.APIError{
+		Message: "Internal Server Error",
+		Details: message, // The specific error message goes into 'details'
 	})
 }
-
-
-
-

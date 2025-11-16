@@ -11,13 +11,13 @@ import (
 var validate = validator.New()
 
 // ValidateStruct validates a single struct that has `validate` tags.
-func ValidateStruct(s interface{}) []models.ErrorDetail {
-	var errors []models.ErrorDetail
+func ValidateStruct(s interface{}) []models.ValidationErrorDetail {
+	var errors []models.ValidationErrorDetail 
 	// Use the validator instance to validate the struct.
 	if err := validate.Struct(s); err != nil {
 		// If validation fails, format the errors into our custom ErrorDetail slice.
 		for _, err := range err.(validator.ValidationErrors) {
-			errors = append(errors, models.ErrorDetail{
+			errors = append(errors, models.ValidationErrorDetail{ 
 				Loc:  []string{err.Field()},
 				Msg:  "Validation failed on tag '" + err.Tag() + "'",
 				Type: "validation_error." + err.Tag(),
@@ -28,15 +28,14 @@ func ValidateStruct(s interface{}) []models.ErrorDetail {
 }
 
 // ValidateBatch is now a generic function that validates a slice of any struct type.
-// It uses reflection to avoid direct dependencies and prevent import cycles.
-func ValidateBatch(batch interface{}) []models.ErrorDetail {
-	var allErrors []models.ErrorDetail
+func ValidateBatch(batch interface{}) []models.ValidationErrorDetail {
+	var allErrors []models.ValidationErrorDetail 
 
 	// Use reflection to check if the provided interface is a slice.
 	slice := reflect.ValueOf(batch)
 	if slice.Kind() != reflect.Slice {
 		// This is a safeguard; should not happen if called correctly.
-		allErrors = append(allErrors, models.ErrorDetail{
+		allErrors = append(allErrors, models.ValidationErrorDetail{ 
 			Loc:  []string{"batch"},
 			Msg:  "Invalid type: expected a slice",
 			Type: "internal_error",
@@ -51,7 +50,7 @@ func ValidateBatch(batch interface{}) []models.ErrorDetail {
 		if err := validate.Struct(item); err != nil {
 			// If an item is invalid, add its errors to the list.
 			for _, validationErr := range err.(validator.ValidationErrors) {
-				allErrors = append(allErrors, models.ErrorDetail{
+				allErrors = append(allErrors, models.ValidationErrorDetail{ // Use new struct name
 					// Prepend the index to the location for clear error reporting.
 					Loc:  []string{fmt.Sprintf("[%d].%s", i, validationErr.Field())},
 					Msg:  "Validation failed on tag '" + validationErr.Tag() + "'",
