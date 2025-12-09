@@ -21,12 +21,12 @@ Telemetry Harbor OSS is the open-source ingestion and visualization stack behind
 
 ## What's Included
 
-*   🚀 **API Ingestion Layer** - Go Fiber-based REST API with Redis-backed queue
-*   ⚡ **Background Worker** - Efficient data processing and TimescaleDB insertion
-*   📊 **Grafana Integration** - Pre-configured dashboards and datasource
-*   🗄️ **TimescaleDB** - Optimized time-series database for telemetry data
-*   🔄 **Redis Queue** - Reliable message queue management
-*   🛠️ **SDK Compatible** - Works with all official Telemetry Harbor SDKs
+* 🚀 **API Ingestion Layer** - Go Fiber-based REST API with Redis-backed queue
+* ⚡ **Background Worker** - Efficient data processing and TimescaleDB insertion
+* 📊 **Grafana Integration** - Pre-configured dashboards and datasource
+* 🗄️ **TimescaleDB** - Optimized time-series database for telemetry data
+* 🔄 **Redis Queue** - Reliable message queue management
+* 🛠️ **SDK Compatible** - Works with all official Telemetry Harbor SDKs
 
 
 
@@ -80,11 +80,22 @@ POST http://yourdomain.com/api/v2/ingest/
 POST http://yourdomain.com/api/v2/ingest/batch
 ```
 
-Both endpoints require the API key set via the `X-API-Key` header.
+### The Things Network (TTN) Webhook
 
-### Example Usage
+Telemetry Harbor OSS supports direct ingestion from TTN v3 Webhooks. We automatically extract `decoded_payload` values, RSSI, SNR, and Frequency.
+
+**Configuration in TTN Console:**
+
+  * **Base URL:** `http://yourdomain.com/api/v2/ingest/ttn`
+  * **HTTP Method:** `POST`
+  * **Headers:** `X-API-Key: your_api_key_here`
+
+*Note: Ensure your TTN payload formatter returns a flat JSON object with numeric values in `decoded_payload`.*
+
+### Example Usage (Standard API)
 
 **Single Data Point:**
+
 ```bash
 curl -X POST "http://localhost:8000/api/v2/ingest/" \
 -H "X-API-Key: your_api_key_here" \
@@ -98,6 +109,7 @@ curl -X POST "http://localhost:8000/api/v2/ingest/" \
 ```
 
 **Batch Data:**
+
 ```bash
 curl -X POST "http://localhost:8000/api/v2/ingest/batch" \
 -H "X-API-Key: your_api_key_here" \
@@ -118,7 +130,6 @@ curl -X POST "http://localhost:8000/api/v2/ingest/batch" \
 ]'
 ```
 
-
 ## 📊 Visualization with Grafana
 
 Grafana comes pre-configured with:
@@ -128,22 +139,18 @@ Grafana comes pre-configured with:
 
 Log into Grafana at `http://localhost:3000` and start exploring your telemetry data immediately.
 
-
-
 ## 🗄️ Data Retention
 
 By default, your telemetry data is kept for **365 days**.  
 Want a different retention period? Just tweak it in [`init.sql`](https://github.com/TelemetryHarbor/telemetry-harbor-oss/blob/main/init.sql) before starting the stack.
 
-
 ## 🛠️ SDK Compatibility
 
 Telemetry Harbor OSS is fully compatible with all official Telemetry Harbor SDKs:
 
-*   [**Telemetry Harbor SDKs**](/docs/sdks)
+  * [**Telemetry Harbor SDKs**](https://docs.telemetryharbor.com/docs/category/sdks/)
 
-Just replace your ingest endpoint with your OSS URL - no code changes needed!
-
+Just replace your ingest endpoint with your OSS URL - no code changes needed\!
 
 ## ☁️ OSS vs Cloud Comparison
 

@@ -17,6 +17,8 @@ import (
 	"go-ingest-service/internal/config"
 	"go-ingest-service/internal/db"
 	general_handler "go-ingest-service/internal/ingest/general"
+	ttn_handler "go-ingest-service/internal/ingest/ttn"
+
 	mw "go-ingest-service/internal/middleware"
 	"go-ingest-service/internal/models"
 )
@@ -60,14 +62,15 @@ func main() {
 	})
 
 	// --- ROUTING ---
-	apiv1 := app.Group("/api/v2")
+	api := app.Group("/api/v2")
 
 	// Define the shared middleware chain for ingest routes.
 	ingestChain := []fiber.Handler{
 		mw.APIKeyAuth,
 	}
-	apiv1.Post("/ingest", append(ingestChain, general_handler.IngestData)...)
-	apiv1.Post("/ingest/batch", append(ingestChain, general_handler.IngestBatchData)...)
+	api.Post("/ingest", append(ingestChain, general_handler.IngestData)...)
+	api.Post("/ingest/batch", append(ingestChain, general_handler.IngestBatchData)...)
+	api.Post("/ingest/ttn", append(ingestChain,ttn_handler.IngestTTNData)...)
 
 
 	// --- Graceful Shutdown ---
