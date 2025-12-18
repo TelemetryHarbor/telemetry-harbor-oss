@@ -1,21 +1,21 @@
 # Telemetry Harbor OSS
 
 <!-- OSS Badges -->
-![License](https://img.shields.io/github/license/TelemetryHarbor/telemetry-harbor-oss.svg)
+![License](https://img.shields.io/github/license/harborscale/telemetry-harbor-oss.svg)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)
-![Last Commit](https://img.shields.io/github/last-commit/TelemetryHarbor/telemetry-harbor-oss.svg)
-![Issues](https://img.shields.io/github/issues/TelemetryHarbor/telemetry-harbor-oss.svg)
-![Pull Requests](https://img.shields.io/github/issues-pr/TelemetryHarbor/telemetry-harbor-oss.svg)
-![Repo Size](https://img.shields.io/github/repo-size/TelemetryHarbor/telemetry-harbor-oss.svg)
-![Contributors](https://img.shields.io/github/contributors/TelemetryHarbor/telemetry-harbor-oss.svg)
+![Last Commit](https://img.shields.io/github/last-commit/harborscale/telemetry-harbor-oss.svg)
+![Issues](https://img.shields.io/github/issues/harborscale/telemetry-harbor-oss.svg)
+![Pull Requests](https://img.shields.io/github/issues-pr/harborscale/telemetry-harbor-oss.svg)
+![Repo Size](https://img.shields.io/github/repo-size/harborscale/telemetry-harbor-oss.svg)
+![Contributors](https://img.shields.io/github/contributors/harborscale/telemetry-harbor-oss.svg)
 <!-- Fun / Community -->
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
-![Stars](https://img.shields.io/github/stars/TelemetryHarbor/telemetry-harbor-oss.svg?style=social)
-![Forks](https://img.shields.io/github/forks/TelemetryHarbor/telemetry-harbor-oss.svg?style=social)
+![Stars](https://img.shields.io/github/stars/harborscale/telemetry-harbor-oss.svg?style=social)
+![Forks](https://img.shields.io/github/forks/harborscale/telemetry-harbor-oss.svg?style=social)
 
-Telemetry Harbor OSS is the open-source ingestion and visualization stack behind Telemetry Harbor. Self-host your own telemetry backend with full control over your data and infrastructure.
+Telemetry Harbor OSS is the open-source ingestion and visualization stack behind Harbor Scale. Self-host your own telemetry backend with full control over your data and infrastructure.
 
-**_Repo Link:_** https://github.com/TelemetryHarbor/telemetry-harbor-oss
+**_Repo Link:_** https://github.com/HarborScale/telemetry-harbor-oss
 
 
 
@@ -35,7 +35,7 @@ Telemetry Harbor OSS is the open-source ingestion and visualization stack behind
 Get your self-hosted Telemetry Harbor instance running in minutes:
 
 ```bash
-git clone https://github.com/TelemetryHarbor/telemetry-harbor-oss.git
+git clone https://github.com/HarborScale/telemetry-harbor-oss.git
 cd telemetry-harbor-oss
 docker compose up -d
 ```
@@ -142,19 +142,19 @@ Log into Grafana at `http://localhost:3000` and start exploring your telemetry d
 ## 🗄️ Data Retention
 
 By default, your telemetry data is kept for **365 days**.  
-Want a different retention period? Just tweak it in [`init.sql`](https://github.com/TelemetryHarbor/telemetry-harbor-oss/blob/main/init.sql) before starting the stack.
+Want a different retention period? Just tweak it in [`init.sql`](https://github.com/HarborScale/telemetry-harbor-oss/blob/main/init.sql) before starting the stack.
 
 ## 🛠️ SDK Compatibility
 
 Telemetry Harbor OSS is fully compatible with all official Telemetry Harbor SDKs:
 
-  * [**Telemetry Harbor SDKs**](https://docs.telemetryharbor.com/docs/category/sdks/)
+  * [**Telemetry Harbor SDKs**](https://docs.harborscale.com/docs/category/sdks/)
 
 Just replace your ingest endpoint with your OSS URL - no code changes needed\!
 
 ## ☁️ OSS vs Cloud Comparison
 
-| Feature | OSS Self-hosted | Telemetry Harbor Cloud |
+| Feature | OSS Self-hosted | Harbor Scale Cloud |
 |---------|----------------|-------------------------|
 | **Pricing** | Free | Free/Paid |
 | **Rate Limits** | No rate limits (your hardware) | Rate limits based on plan |
@@ -196,7 +196,7 @@ This project is licensed under the **Apache License 2.0**.
 *   ✅ **Free to modify and redistribute**
 *   ⚠️ **Must include attribution** (keep copyright + NOTICE file)
 
-See [LICENSE](https://github.com/TelemetryHarbor/telemetry-harbor-oss/blob/main/LICENSE) for details.
+See [LICENSE](https://github.com/harborscale/telemetry-harbor-oss/blob/main/LICENSE) for details.
 
 If you use this project in your product, please credit Telemetry Harbor with a link to https://telemetryharbor.com.
 
@@ -210,4 +210,4 @@ We welcome issues, pull requests, and feature suggestions!
 *   **Fork the repo** and submit PRs for improvements
 *   **Join our community** discussions
 
-**_Repo Link:_** https://github.com/TelemetryHarbor/telemetry-harbor-oss
+**_Repo Link:_** https://github.com/harborscale/telemetry-harbor-oss
