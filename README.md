@@ -1,4 +1,5 @@
-# Telemetry Harbor OSS
+
+# Harbor Scale OSS
 
 <!-- OSS Badges -->
 ![License](https://img.shields.io/github/license/harborscale/telemetry-harbor-oss.svg)
@@ -13,9 +14,9 @@
 ![Stars](https://img.shields.io/github/stars/harborscale/telemetry-harbor-oss.svg?style=social)
 ![Forks](https://img.shields.io/github/forks/harborscale/telemetry-harbor-oss.svg?style=social)
 
-Telemetry Harbor OSS is the open-source ingestion and visualization stack behind Harbor Scale. Self-host your own telemetry backend with full control over your data and infrastructure.
+Harbor Scale OSS is the open-source ingestion and visualization stack behind Harbor Scale. Self-host your own telemetry backend with full control over your data and infrastructure.
 
-**_Repo Link:_** https://github.com/HarborScale/telemetry-harbor-oss
+**_Repo Link:_** https://github.com/harborscale/telemetry-harbor-oss
 
 
 
@@ -26,16 +27,16 @@ Telemetry Harbor OSS is the open-source ingestion and visualization stack behind
 * 📊 **Grafana Integration** - Pre-configured dashboards and datasource
 * 🗄️ **TimescaleDB** - Optimized time-series database for telemetry data
 * 🔄 **Redis Queue** - Reliable message queue management
-* 🛠️ **SDK Compatible** - Works with all official Telemetry Harbor SDKs
+* 🛠️ **SDK Compatible** - Works with all official Harbor Scale SDKs
 
 
 
 ## 🚀 Quick Start
 
-Get your self-hosted Telemetry Harbor instance running in minutes:
+Get your self-hosted Harbor Scale instance running in minutes:
 
 ```bash
-git clone https://github.com/HarborScale/telemetry-harbor-oss.git
+git clone https://github.com/harborscale/telemetry-harbor-oss.git
 cd telemetry-harbor-oss
 docker compose up -d
 ```
@@ -59,7 +60,7 @@ Once started:
 This repository ships with default credentials for ease of testing. **Before using in production**, you must change the following in `docker-compose.yml`:
 
 *   `POSTGRES_PASSWORD` - TimescaleDB password
-*   `REDIS_PASSWORD` - Redis authentication password  
+*   `REDIS_PASSWORD` - Redis authentication password
 *   `API_KEY` - API authentication key for data ingestion
 *   `GF_SECURITY_ADMIN_PASSWORD` - Grafana admin password
 
@@ -68,21 +69,21 @@ Failure to do so will leave your system vulnerable.
 
 ## 📡 API Ingestion
 
-Replace Telemetry Harbor Cloud URLs with your own domain, omitting the harbor ID.
+Replace Harbor Scale Cloud URLs with your own domain, omitting the harbor ID.
 
 ### Single Data Push
 ```
 POST http://yourdomain.com/api/v2/ingest/
 ```
 
-### Batch Data Push  
+### Batch Data Push
 ```
 POST http://yourdomain.com/api/v2/ingest/batch
 ```
 
 ### The Things Network (TTN) Webhook
 
-Telemetry Harbor OSS supports direct ingestion from TTN v3 Webhooks. We automatically extract `decoded_payload` values, RSSI, SNR, and Frequency.
+Harbor Scale OSS supports direct ingestion from TTN v3 Webhooks. We automatically extract `decoded_payload` values, RSSI, SNR, and Frequency.
 
 **Configuration in TTN Console:**
 
@@ -97,60 +98,36 @@ Telemetry Harbor OSS supports direct ingestion from TTN v3 Webhooks. We automati
 **Single Data Point:**
 
 ```bash
-curl -X POST "http://localhost:8000/api/v2/ingest/" \
--H "X-API-Key: your_api_key_here" \
--H "Content-Type: application/json" \
--d '{
-  "time": "2025-01-18T19:24:00.948Z",
-  "ship_id": "test_device_single",
-  "cargo_id": "test_metric",
-  "value": 123.45
-}'
+curl -X POST "http://localhost:8000/api/v2/ingest/" -H "X-API-Key: your_api_key_here" -H "Content-Type: application/json" -d '{"time": "2025-01-18T19:24:00.948Z", "ship_id": "test_device_single", "cargo_id": "test_metric", "value": 123.45}'
 ```
 
 **Batch Data:**
 
 ```bash
-curl -X POST "http://localhost:8000/api/v2/ingest/batch" \
--H "X-API-Key: your_api_key_here" \
--H "Content-Type: application/json" \
--d '[
-  {
-    "time": "2025-01-18T19:24:00.948Z",
-    "ship_id": "batch_device",
-    "cargo_id": "temperature",
-    "value": 25.5
-  },
-  {
-    "time": "2025-01-18T19:24:00.948Z", 
-    "ship_id": "batch_device",
-    "cargo_id": "humidity",
-    "value": 60.2
-  }
-]'
+curl -X POST "http://localhost:8000/api/v2/ingest/batch" -H "X-API-Key: your_api_key_here" -H "Content-Type: application/json" -d '[{"time": "2025-01-18T19:24:00.948Z", "ship_id": "batch_device", "cargo_id": "temperature", "value": 25.5}, {"time": "2025-01-18T19:24:00.948Z", "ship_id": "batch_device", "cargo_id": "humidity", "value": 60.2}]'
 ```
 
 ## 📊 Visualization with Grafana
 
 Grafana comes pre-configured with:
-*   **Telemetry Harbor Datasource** (TimescaleDB connection)
-*   **Comprehensive Telemetry Dashboard** 
+*   **Harbor Scale Datasource** (TimescaleDB connection)
+*   **Comprehensive Telemetry Dashboard**
 *   **Ready-to-use panels** for time-series visualization
 
 Log into Grafana at `http://localhost:3000` and start exploring your telemetry data immediately.
 
 ## 🗄️ Data Retention
 
-By default, your telemetry data is kept for **365 days**.  
-Want a different retention period? Just tweak it in [`init.sql`](https://github.com/HarborScale/telemetry-harbor-oss/blob/main/init.sql) before starting the stack.
+By default, your telemetry data is kept for **365 days**.
+Want a different retention period? Just tweak it in [`init.sql`](https://github.com/harborscale/telemetry-harbor-oss/blob/main/init.sql) before starting the stack.
 
 ## 🛠️ SDK Compatibility
 
-Telemetry Harbor OSS is fully compatible with all official Telemetry Harbor SDKs:
+Harbor Scale OSS is fully compatible with all official Harbor Scale SDKs:
 
-  * [**Telemetry Harbor SDKs**](https://docs.harborscale.com/docs/category/sdks/)
+  * [**Harbor Scale SDKs**](https://docs.harborscale.com/docs/category/sdks/)
 
-Just replace your ingest endpoint with your OSS URL - no code changes needed\!
+Just replace your ingest endpoint with your OSS URL - no code changes needed!
 
 ## ☁️ OSS vs Cloud Comparison
 
@@ -198,7 +175,7 @@ This project is licensed under the **Apache License 2.0**.
 
 See [LICENSE](https://github.com/harborscale/telemetry-harbor-oss/blob/main/LICENSE) for details.
 
-If you use this project in your product, please credit Telemetry Harbor with a link to https://telemetryharbor.com.
+If you use this project in your product, please credit Harbor Scale with a link to https://harborscale.com.
 
 
 
