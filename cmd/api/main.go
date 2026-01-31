@@ -27,7 +27,6 @@ func main() {
 	if err := config.LoadConfig(); err != nil {
 		log.Fatalf("[API] Failed to load configuration: %v", err)
 	}
- 
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: customHTTPErrorHandler,
@@ -38,11 +37,21 @@ func main() {
 		Format: "[API] ${time} | ${status} | ${latency} | ${ip} | ${method} | ${path} | ${error}\n",
 	}))
 	app.Use(recover.New())
+	// --- Determine CORS Settings Dynamically ---
+	allowOrigins := config.AppConfig.APP_URL
+	allowCredentials := true
+
+	// If the user provides "*" or empty string in ENV,
+	// we must disable credentials to prevent browser rejection.
+	if allowOrigins == "*" || allowOrigins == "" {
+		allowOrigins = "*"
+		allowCredentials = false
+	}
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     config.AppConfig.APP_URL,
+		AllowOrigins:     allowOrigins,
 		AllowMethods:     "POST,GET,OPTIONS",
 		AllowHeaders:     "Origin,Content-Type,Accept,X-API-Key",
-		AllowCredentials: true,
+		AllowCredentials: allowCredentials,
 	}))
 	app.Use(compress.New())
 
@@ -70,8 +79,7 @@ func main() {
 	}
 	api.Post("/ingest", append(ingestChain, general_handler.IngestData)...)
 	api.Post("/ingest/batch", append(ingestChain, general_handler.IngestBatchData)...)
-	api.Post("/ingest/ttn", append(ingestChain,ttn_handler.IngestTTNData)...)
-
+	api.Post("/ingest/ttn", append(ingestChain, ttn_handler.IngestTTNData)...)
 
 	// --- Graceful Shutdown ---
 	sigChan := make(chan os.Signal, 1)

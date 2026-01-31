@@ -56,6 +56,7 @@ services:
         condition: service_healthy
     environment:
       # --- General ---
+      APP_URL: "http://localhost:8001" # <-- YOUR FRONTEND URL TO ENFORCE CORS
       APP_ENV: production
       PORT: "8000"
       API_KEY: "change-this-secret-api-key" # <-- CHANGE ME!
