@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"go-ingest-service/internal/cache"
 	"go-ingest-service/internal/config"
@@ -32,6 +33,10 @@ func IngestData(c *fiber.Ctx) error {
 			Message: "Validation Error",
 			Details: validationErrors,
 		})
+	}
+	// If the user did not provide a time, IsZero() will be true.
+	if data.Time.IsZero() {
+		data.Time = time.Now().UTC()
 	}
 
 	queuedData := models.QueuedData{
@@ -84,6 +89,15 @@ func IngestBatchData(c *fiber.Ctx) error {
 			Message: "Validation Error",
 			Details: validationErrors,
 		})
+	}
+
+	// capture time so we don't have time drift
+	now := time.Now().UTC()
+	for i := range batch {
+		// If the user did not provide a time, IsZero() will be true. We fill it
+		if batch[i].Time.IsZero() {
+			batch[i].Time = now
+		}
 	}
 
 	queuedData := models.QueuedData{
